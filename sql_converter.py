@@ -80,8 +80,6 @@ class SQLConverter:
         """Split SQL content into chunks based on statement boundaries"""
         # Split on GO statements (common in Sybase/SQL Server)
         chunks = []
-        current_chunk = []
-        current_size = 0
         
         # First split by GO statements
         statements = [stmt.strip() for stmt in sql_content.split('go') if stmt.strip()]
@@ -394,24 +392,22 @@ def split_sql_content(sql_content, max_chunk_size=8000):  # 增加块大小以�
     """
     # Split on GO statements (common in Sybase/SQL Server)
     chunks = []
-    current_chunk = []
-    current_size = 0
     
-    # 首先按GO语句分割
+    # First split by GO statements
     statements = [stmt.strip() for stmt in sql_content.split('go') if stmt.strip()]
     
     for stmt in statements:
         stmt_size = len(stmt)
         
-        # 如果单个语句超过最大块大小，需要进一步分割
+        # If single statement exceeds max size, need to split further
         if stmt_size > max_chunk_size:
-            # 按存储过程分割
+            # Split by stored procedures
             procs = stmt.split('create proc')
             for proc in procs:
                 if not proc.strip():
                     continue
                 if len(proc) > max_chunk_size:
-                    # 如果存储过程还是太大，按begin/end块分割
+                    # If proc is still too large, split by begin/end blocks
                     blocks = proc.split('begin')
                     for block in blocks:
                         if not block.strip():
