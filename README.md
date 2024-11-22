@@ -1,5 +1,8 @@
 # SQL Conversion Automation Tool
 
+[![Python Tests](https://github.com/kamusis/ai_sql_converter/actions/workflows/python-tests.yml/badge.svg)](https://github.com/kamusis/ai_sql_converter/actions/workflows/python-tests.yml)
+[![codecov](https://codecov.io/gh/kamusis/ai_sql_converter/branch/main/graph/badge.svg)](https://codecov.io/gh/kamusis/ai_sql_converter)
+
 A powerful AI-powered tool for automatically converting SQL scripts between different database management systems with comprehensive prompt optimization.
 
 ## 🌟 Features
@@ -161,7 +164,7 @@ TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
 
 ## 📁 Directory Structure
 
-```
+````
 .
 ├── sql_converter.py         # Main conversion script
 ├── prompt_optimizer.py      # Prompt optimization logic
