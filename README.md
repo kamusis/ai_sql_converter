@@ -164,7 +164,7 @@ TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
 
 ## 📁 Directory Structure
 
-````
+```
 .
 ├── sql_converter.py         # Main conversion script
 ├── prompt_optimizer.py      # Prompt optimization logic
@@ -176,6 +176,7 @@ TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
 ├── sql_files/               # Source SQL files
 │   └── source1.sql
 └── README.md               # This documentation
+
 ```
 
 ## ⚠️ Limitations
