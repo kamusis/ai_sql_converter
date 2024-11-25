@@ -57,6 +57,35 @@ A powerful AI-powered tool for automatically converting SQL scripts between diff
    - Copy `.env.example` to `.env`
    - Add your OpenAI API key or Anthropic API key and other configurations
 
+## 🔧 Usage
+
+### Basic Usage
+
+1. Place your SQL files in the `sql_files` directory
+2. Configure the `.env` file
+3. Run the converter:
+   ```bash
+   python sql_converter.py
+   ```
+
+### Advanced Usage
+
+#### Multiple File Conversion
+```bash
+# Configure SOURCE_DB_CODE_FILE in .env:
+SOURCE_DB_CODE_FILE=./sql_files/*.sql    # Process all SQL files
+# Or specify multiple files:
+SOURCE_DB_CODE_FILE=./sql_files/file1.sql;./sql_files/file2.sql
+```
+
+#### Custom Output Location
+```bash
+# Configure TARGET_DB_CODE_FILE in .env:
+TARGET_DB_CODE_FILE=./output/    # Custom output directory
+# Or use 'auto' for automatic naming:
+TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
+```
+
 ## 🔑 Environment Variables
 
 The following environment variables can be configured in `.env` file:
@@ -115,6 +144,10 @@ TARGET_DB_CODE_FILE=auto          # Target file naming (auto/specific path)
 
 ## 🛠 Configuration Tips
 
+### Prompt Templates
+`prompts/optimized_prompt.txt`:
+   - Modified as you see fit
+
 ### Enabling Multiple Providers
 1. Set `OPENAI_ENABLED=true` and/or `CLAUDE_ENABLED=true`
 2. Configure respective API keys
@@ -130,48 +163,6 @@ TARGET_DB_CODE_FILE=auto          # Target file naming (auto/specific path)
 - Configure fallback providers
 - Test with different providers for optimal results
 
-## ⚠️ Limitations
-
-- Provider availability depends on API status
-- Performance varies by provider and model
-- API rate limits may apply
-- Requires valid API credentials for enabled providers
-
-## ⚙️ Configuration
-
-### Prompt Templates
-`prompts/optimized_prompt.txt`:
-   - Modified as you see fit
-
-## 🔧 Usage
-
-### Basic Usage
-
-1. Place your SQL files in the `sql_files` directory
-2. Configure the `.env` file
-3. Run the converter:
-   ```bash
-   python sql_converter.py
-   ```
-
-### Advanced Usage
-
-#### Multiple File Conversion
-```bash
-# Configure SOURCE_DB_CODE_FILE in .env:
-SOURCE_DB_CODE_FILE=./sql_files/*.sql    # Process all SQL files
-# Or specify multiple files:
-SOURCE_DB_CODE_FILE=./sql_files/file1.sql;./sql_files/file2.sql
-```
-
-#### Custom Output Location
-```bash
-# Configure TARGET_DB_CODE_FILE in .env:
-TARGET_DB_CODE_FILE=./output/    # Custom output directory
-# Or use 'auto' for automatic naming:
-TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
-```
-
 ## 🔍 Program Logic
 
 ### 1. Prompt Management
@@ -184,7 +175,7 @@ TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
 
 ### 3. Conversion Process
 - Parallel processing of SQL chunks
-- Uses GPT-3.5-Turbo or Claude-2 for faster conversion
+- Uses GPT-4o-mini or Claude-3-haiku for faster conversion
 - Maintains conversion context across chunks
 
 ### 4. Performance Optimization
@@ -217,16 +208,12 @@ TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
 
 ## 🔄 Troubleshooting
 
-1. **Prompt Optimization Issues**:
-   - Delete `optimized_prompt.prompt` to force re-optimization
-   - Check `original_prompt.prompt` for proper formatting
-
-2. **Conversion Errors**:
+1. **Conversion Errors**:
    - Verify source SQL syntax
    - Check chunk size configuration
    - Review database type settings
 
-3. **Performance Issues**:
+2. **Performance Issues**:
    - Adjust chunk size
    - Check network connectivity
    - Verify API key status
@@ -243,7 +230,7 @@ TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
 
 MIT License
 
-Copyright (c) 2024 [kamusis/Enmotech](https://github.com/kamusis)
+Copyright (c) 2024 [kamusis@Enmotech](https://github.com/kamusis)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -265,7 +252,7 @@ SOFTWARE.
 
 ## 👥 Authors
 
-[kamusis/Enmotech](https://github.com/kamusis)
+[kamusis@Enmotech](https://github.com/kamusis)
 
 ## 🧪 Testing
 
