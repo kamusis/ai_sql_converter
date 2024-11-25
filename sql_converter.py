@@ -149,7 +149,7 @@ class SQLConverter:
         """Convert SQL content in parallel"""
         start_time = time.perf_counter()
         
-        # 如果没有提供 system_prompt，使用默认提示词
+        # If no system_prompt is provided, use the default prompt
         if system_prompt is None:
             try:
                 prompt_path = os.path.join('prompts', 'optimized_prompt.txt')
