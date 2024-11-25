@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2] - 2024-11-25
+
+### 🔧 Dependencies
+- Removed unused `json` module import
+- Added `colorama` for Windows color support
+- Moved test dependencies to optional `[test]` section
+- Improved dependency documentation
+
 ## [1.1.1] - 2024-11-25
 
 ### 🐛 Bug Fixes

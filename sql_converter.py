@@ -1,10 +1,14 @@
 import os
-import json
 import glob
 import time
 import asyncio
+import platform
 from dotenv import load_dotenv
-from typing import Dict, List, Optional, Union
+
+# Initialize colorama for Windows color support
+if platform.system() == 'Windows':
+    from colorama import init
+    init()
 
 class SQLConverter:
     def __init__(self, source_db_type=None, target_db_type=None, provider=None):
@@ -24,6 +28,7 @@ class SQLConverter:
             self.clients['openai'] = openai.OpenAI()
             
         if os.getenv('CLAUDE_ENABLED', 'true').lower() == 'true':
+            import anthropic
             self.clients['claude'] = anthropic.Anthropic(
                 api_key=os.getenv('CLAUDE_API_KEY')
             )
