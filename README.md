@@ -26,8 +26,8 @@ A powerful AI-powered tool for automatically converting SQL scripts between diff
   - Optimization time monitoring
 
 - **Multiple AI Provider Support**:
-  - OpenAI (GPT-3.5, GPT-4)
-  - Anthropic (Claude-2, Claude Instant)
+  - OpenAI
+  - Anthropic
 
 ## 📋 Requirements
 
@@ -94,12 +94,12 @@ The following environment variables can be configured in `.env` file:
 # OpenAI Configuration
 OPENAI_ENABLED=true                 # Enable/disable OpenAI provider
 OPENAI_API_KEY=your_openai_api_key  # Your OpenAI API key
-OPENAI_MODEL=gpt-3.5-turbo         # Model to use for OpenAI
+OPENAI_MODEL=gpt-4o-mini            # Model to use for OpenAI
 
 # Claude Configuration
-CLAUDE_ENABLED=false                # Enable/disable Claude provider
-CLAUDE_API_KEY=your_claude_api_key  # Your Claude API key
-CLAUDE_MODEL=claude-2              # Model to use for Claude
+CLAUDE_ENABLED=false                   # Enable/disable Claude provider
+CLAUDE_API_KEY=your_claude_api_key     # Your Claude API key
+CLAUDE_MODEL=claude-3-haiku-20240307   # Model to use for Claude
 
 # Default AI Provider
 DEFAULT_AI_PROVIDER=openai         # Which provider to use by default (openai/claude)
@@ -121,12 +121,12 @@ TARGET_DB_CODE_FILE=auto          # Target file naming (auto/specific path)
 #### OpenAI Configuration
 - `OPENAI_API_KEY`: Your OpenAI API key
 - `OPENAI_MODEL`: OpenAI model to use
-  - Available models: gpt-3.5-turbo, gpt-4 (if available)
+  - Available models: gpt-4o-mini, gpt-4o, o1-preview, o1-mini
 
 #### Claude Configuration
 - `CLAUDE_API_KEY`: Your Claude API key
 - `CLAUDE_MODEL`: Claude model to use
-  - Available models: claude-2, claude-instant-1
+  - Available models: claude-3-opus-20240229, claude-3-sonnet-20240229, claude-3-haiku-20240307, claude-3-5-sonnet-20241022, claude-3-5-haiku-20241022
 
 #### Database Configuration
 - `SOURCE_DB_TYPE`: Source database type
