@@ -1,7 +1,6 @@
 # SQL Conversion Automation Tool
 
 [![Python Tests](https://github.com/kamusis/ai_sql_converter/actions/workflows/python-tests.yml/badge.svg)](https://github.com/kamusis/ai_sql_converter/actions/workflows/python-tests.yml)
-[![codecov](https://codecov.io/gh/kamusis/ai_sql_converter/branch/main/graph/badge.svg)](https://codecov.io/gh/kamusis/ai_sql_converter)
 
 A powerful AI-powered tool for automatically converting SQL scripts between different database management systems with comprehensive prompt optimization.
 
@@ -270,60 +269,25 @@ SOFTWARE.
 
 ## 🧪 Testing
 
-The project includes both unit tests and integration tests to ensure code quality and functionality.
-
-### Running Tests
-
-To run all tests:
-
-```bash
-python -m unittest discover tests
-```
-
-To run specific test files:
-
-```bash
-# Run unit tests
-python -m unittest tests/test_sql_converter.py
-
-# Run integration tests
-python -m unittest tests/test_integration.py
-```
-
 ### Test Structure
 
-1. **Unit Tests** (`tests/test_sql_converter.py`)
-   - Tests individual components and functions
-   - Covers SQLConverter and PromptOptimizer classes
-   - Uses mocking for external dependencies (OpenAI API, Anthropic API)
-   - Tests include:
-     - Initialization
-     - SQL chunk conversion
-     - SQL splitting
-     - Parallel processing
+1. **File Loading Tests** (`tests/test_file_loading.py`)
+   - Tests SQL file loading and validation
+   - Tests environment configuration
+   - Tests basic functionality including:
+     - SQL file reading
+     - Environment variable handling
      - Database type validation
-     - Prompt management
-
-2. **Integration Tests** (`tests/test_integration.py`)
-   - Tests complete SQL conversion workflow
-   - Tests different database combinations
-   - Uses real SQL examples
-   - Requires valid OpenAI API key or Anthropic API key
-   - Test cases include:
-     - Sybase to PostgreSQL conversion
-     - MySQL to PostgreSQL conversion
 
 ### Test Fixtures
 
-Test fixtures are automatically created in the `tests/fixtures` directory during test execution. These include:
+Test fixtures are located in the `tests/fixtures` directory. These include:
 - Sample SQL files for different database types
 - Expected conversion results
-- All fixtures are cleaned up after tests complete
 
 ### Writing New Tests
 
 When adding new features or fixing bugs:
-1. Add corresponding unit tests in `test_sql_converter.py`
-2. Add integration tests for new database types or SQL features
-3. Follow the existing test structure and naming conventions
-4. Ensure all tests pass before submitting changes
+1. Add corresponding test cases in `test_file_loading.py`
+2. Follow the existing test structure and naming conventions
+3. Ensure all tests pass before submitting changes
