@@ -21,23 +21,23 @@ A powerful AI-powered tool for automatically converting SQL scripts between diff
   - Supports large SQL files through intelligent chunking
   - Parallel processing for faster conversion
 
-- **Prompt Optimization**:
-  - Dynamic prompt template system
-  - Caching of optimized prompts
-  - Automatic prompt improvement
-
 - **Performance Tracking**:
   - Detailed time logging
   - Per-chunk conversion tracking
   - Optimization time monitoring
 
+- **Multiple AI Provider Support**:
+  - OpenAI (GPT-3.5, GPT-4)
+  - Anthropic (Claude-2, Claude Instant)
+
 ## 📋 Requirements
 
 - Python 3.8+
-- OpenAI API key
+- OpenAI API key or Anthropic API key
 - Required Python packages:
   ```
-  openai>=1.0.0
+  openai>=1.3.0
+  anthropic>=0.5.0
   python-dotenv
   aiohttp
   ```
@@ -46,8 +46,7 @@ A powerful AI-powered tool for automatically converting SQL scripts between diff
 
 1. Clone the repository:
    ```bash
-   git clone [repository-url]
-   cd [repository-directory]
+   git clone https://github.com/kamusis/ai_sql_converter
    ```
 
 2. Install dependencies:
@@ -57,57 +56,93 @@ A powerful AI-powered tool for automatically converting SQL scripts between diff
 
 3. Configure environment variables:
    - Copy `.env.example` to `.env`
-   - Add your OpenAI API key and other configurations
+   - Add your OpenAI API key or Anthropic API key and other configurations
 
 ## 🔑 Environment Variables
 
 The following environment variables can be configured in `.env` file:
 
-```shell
-# OpenAI API Configuration
-OPENAI_API_KEY=your_openai_api_key
-OPENAI_MODEL=gpt-3.5-turbo-16k  # OpenAI model to use for SQL conversion
+```bash
+# OpenAI Configuration
+OPENAI_ENABLED=true                 # Enable/disable OpenAI provider
+OPENAI_API_KEY=your_openai_api_key  # Your OpenAI API key
+OPENAI_MODEL=gpt-3.5-turbo         # Model to use for OpenAI
+
+# Claude Configuration
+CLAUDE_ENABLED=false                # Enable/disable Claude provider
+CLAUDE_API_KEY=your_claude_api_key  # Your Claude API key
+CLAUDE_MODEL=claude-2              # Model to use for Claude
+
+# Default AI Provider
+DEFAULT_AI_PROVIDER=openai         # Which provider to use by default (openai/claude)
 
 # Database Configuration
-SOURCE_DB_TYPE=SYBASE
-TARGET_DB_TYPE=POSTGRESQL
-SOURCE_DB_CODE_FILE=./sql_files/source1.sql
-TARGET_DB_CODE_FILE=auto
+SOURCE_DB_TYPE=SYBASE             # Source database type
+TARGET_DB_TYPE=POSTGRESQL         # Target database type
+SOURCE_DB_CODE_FILE=./sql_files/source1.sql  # Source SQL file(s)
+TARGET_DB_CODE_FILE=auto          # Target file naming (auto/specific path)
 ```
 
 ### Environment Variables Description
 
+#### AI Provider Configuration
+- `OPENAI_ENABLED`: Enable/disable OpenAI provider (true/false)
+- `CLAUDE_ENABLED`: Enable/disable Claude provider (true/false)
+- `DEFAULT_AI_PROVIDER`: Default provider to use (openai/claude)
+
+#### OpenAI Configuration
 - `OPENAI_API_KEY`: Your OpenAI API key
-- `OPENAI_MODEL`: The OpenAI model to use (default: gpt-3.5-turbo)
+- `OPENAI_MODEL`: OpenAI model to use
+  - Available models: gpt-3.5-turbo, gpt-4 (if available)
+
+#### Claude Configuration
+- `CLAUDE_API_KEY`: Your Claude API key
+- `CLAUDE_MODEL`: Claude model to use
+  - Available models: claude-2, claude-instant-1
+
+#### Database Configuration
 - `SOURCE_DB_TYPE`: Source database type
 - `TARGET_DB_TYPE`: Target database type
 - `SOURCE_DB_CODE_FILE`: Source SQL file path
-- `TARGET_DB_CODE_FILE`: Target SQL file path (use 'auto' for automatic naming)
+- `TARGET_DB_CODE_FILE`: Target SQL file path
+
+### Supported Database Types
+- SYBASE
+- MYSQL
+- POSTGRESQL
+- ORACLE
+- SQLSERVER
+- DB2
+
+## 🛠 Configuration Tips
+
+### Enabling Multiple Providers
+1. Set `OPENAI_ENABLED=true` and/or `CLAUDE_ENABLED=true`
+2. Configure respective API keys
+3. Set preferred `DEFAULT_AI_PROVIDER`
+
+### Provider Selection Strategy
+- System uses the default provider specified in `DEFAULT_AI_PROVIDER`
+- Falls back to first available provider if default is unavailable
+- Allows runtime provider switching via API
+
+### Best Practices
+- Enable multiple providers for redundancy
+- Configure fallback providers
+- Test with different providers for optimal results
+
+## ⚠️ Limitations
+
+- Provider availability depends on API status
+- Performance varies by provider and model
+- API rate limits may apply
+- Requires valid API credentials for enabled providers
 
 ## ⚙️ Configuration
 
 ### Prompt Templates
-
-The tool uses two types of prompt templates:
-
-1. **Original Prompt** (`prompts/original_prompt.prompt`):
-   - Base template for SQL conversion
-   - Customizable instructions and rules
-   - Format:
-     ```json
-     {
-       "prompt": "Your prompt template here with {source_type} and {target_type} placeholders",
-       "metadata": {
-         "description": "Template description",
-         "version": "1.0"
-       }
-     }
-     ```
-
-2. **Optimized Prompt** (`prompts/optimized_prompt.prompt`):
-   - Automatically generated optimized version
-   - Cached for better performance
-   - Generated once and reused
+`prompts/optimized_prompt.txt`:
+   - Modified as you see fit
 
 ## 🔧 Usage
 
@@ -141,10 +176,7 @@ TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
 ## 🔍 Program Logic
 
 ### 1. Prompt Management
-- Loads original prompt template
-- Checks for cached optimized prompt
-- Performs optimization if needed
-- Caches optimized prompt for future use
+- Loads prompt template
 
 ### 2. SQL Processing
 - Splits large SQL files into manageable chunks
@@ -153,7 +185,7 @@ TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
 
 ### 3. Conversion Process
 - Parallel processing of SQL chunks
-- Uses GPT-3.5-Turbo-16K for faster conversion
+- Uses GPT-3.5-Turbo or Claude-2 for faster conversion
 - Maintains conversion context across chunks
 
 ### 4. Performance Optimization
@@ -167,12 +199,10 @@ TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
 ```
 .
 ├── sql_converter.py         # Main conversion script
-├── prompt_optimizer.py      # Prompt optimization logic
 ├── .env                     # Configuration file
 ├── requirements.txt         # Python dependencies
 ├── prompts/
-│   ├── original_prompt.prompt    # Base prompt template
-│   └── optimized_prompt.prompt   # Cached optimized prompt
+│   └── optimized_prompt.txt   # Optimized prompt
 ├── sql_files/               # Source SQL files
 │   └── source1.sql
 └── README.md               # This documentation
@@ -181,7 +211,7 @@ TARGET_DB_CODE_FILE=auto         # Creates [source_name]_result.sql
 
 ## ⚠️ Limitations
 
-- Relies on OpenAI's API availability
+- Relies on OpenAI's API or Anthropic's API availability
 - Performance depends on API response time
 - Complex SQL structures may require manual verification
 - API rate limits may affect processing speed
@@ -265,7 +295,7 @@ python -m unittest tests/test_integration.py
 1. **Unit Tests** (`tests/test_sql_converter.py`)
    - Tests individual components and functions
    - Covers SQLConverter and PromptOptimizer classes
-   - Uses mocking for external dependencies (OpenAI API)
+   - Uses mocking for external dependencies (OpenAI API, Anthropic API)
    - Tests include:
      - Initialization
      - SQL chunk conversion
@@ -278,7 +308,7 @@ python -m unittest tests/test_integration.py
    - Tests complete SQL conversion workflow
    - Tests different database combinations
    - Uses real SQL examples
-   - Requires valid OpenAI API key
+   - Requires valid OpenAI API key or Anthropic API key
    - Test cases include:
      - Sybase to PostgreSQL conversion
      - MySQL to PostgreSQL conversion
