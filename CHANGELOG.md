@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.1] - 2024-11-25
+
+### 🐛 Bug Fixes
+- Added missing `glob` module import for wildcard file pattern support
+- Fixed potential crash in multi-file mode when using wildcards
+
+### 🧪 Testing
+- Added test cases for multi-file SQL processing
+- Added wildcard pattern file loading tests
+
 ## [1.1.0] - 2024-11-25
 
 ### 🚀 Enhanced Progress Monitoring

@@ -1,8 +1,10 @@
 import os
+import json
+import glob
 import time
 import asyncio
-import anthropic
 from dotenv import load_dotenv
+from typing import Dict, List, Optional, Union
 
 class SQLConverter:
     def __init__(self, source_db_type=None, target_db_type=None, provider=None):
@@ -237,41 +239,59 @@ class SQLConverter:
             return self.claude_model
         return 'unknown'
 
-def load_sql_files(source_path):
-    """
-    Load SQL files based on the source path configuration.
-    Returns a list of tuples (file_path, content)
-    """
-    files_content = []
-    
-    # Check if path contains semicolons (multiple files)
-    if ';' in source_path:
-        paths = source_path.split(';')
-        for path in paths:
-            # Handle wildcards
-            if '*' in path:
-                for file_path in glob.glob(path):
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        files_content.append((file_path, f.read()))
-            else:
-                with open(path, 'r', encoding='utf-8') as f:
-                    files_content.append((path, f.read()))
-    
-    # Check if it's a directory
-    elif os.path.isdir(source_path):
-        for root, _, files in os.walk(source_path):
-            for file in files:
-                if file.endswith('.sql'):
-                    file_path = os.path.join(root, file)
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        files_content.append((file_path, f.read()))
-    
-    # Single file
-    else:
-        with open(source_path, 'r', encoding='utf-8') as f:
-            files_content.append((source_path, f.read()))
-    
-    return files_content
+    @staticmethod
+    def load_sql_files(source_path):
+        """
+        Load SQL files based on the source path configuration.
+        
+        Args:
+            source_path (str): Path to SQL file(s). Supports:
+                - Single file: "./path/to/file.sql"
+                - Multiple files: "./file1.sql;./file2.sql;./dir/*.sql"
+                - Directory: "./sql_files/" (processes all .sql files recursively)
+        
+        Returns:
+            List[Tuple[str, str]]: List of tuples (file_path, content)
+        
+        Raises:
+            FileNotFoundError: If any specified file is not found
+        """
+        files_content = []
+        
+        # Check if path contains semicolons (multiple files)
+        if ';' in source_path:
+            paths = source_path.split(';')
+            for path in paths:
+                # Handle wildcards
+                if '*' in path:
+                    for file_path in glob.glob(path):
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            files_content.append((file_path, f.read()))
+                else:
+                    with open(path, 'r', encoding='utf-8') as f:
+                        files_content.append((path, f.read()))
+        
+        # Check for wildcard pattern
+        elif '*' in source_path:
+            for file_path in glob.glob(source_path):
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    files_content.append((file_path, f.read()))
+        
+        # Check if it's a directory
+        elif os.path.isdir(source_path):
+            for root, _, files in os.walk(source_path):
+                for file in files:
+                    if file.endswith('.sql'):
+                        file_path = os.path.join(root, file)
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            files_content.append((file_path, f.read()))
+        
+        # Single file
+        else:
+            with open(source_path, 'r', encoding='utf-8') as f:
+                files_content.append((source_path, f.read()))
+        
+        return files_content
 
 def get_target_file_path(source_file, target_config, target_db_type, provider, model_name):
     """
@@ -302,7 +322,7 @@ async def main():
         converter = SQLConverter()
         
         # Load SQL files
-        sql_files = load_sql_files(converter.source_path)
+        sql_files = SQLConverter.load_sql_files(converter.source_path)
         if not sql_files:
             print("No SQL files found to convert")
             return
